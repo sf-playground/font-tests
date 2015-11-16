@@ -15,32 +15,45 @@ except ImportError:
 
 
 class MetricsObject(object):
-    def __init__(self, fontpath):
-        unitsPerEm = 0              # [head] unitsPerEm
-        ascent = 0                  # [hhea] ascent
-        descent = 0                 # [hhea] descent
-        lineGap = 0                 # [hhea] lineGap
-        capheight = 0               # [OS/2] sCapHeight
-        xheight = 0                 # [OS/2] sxHeight
-        typoAscender = 0            # [OS/2] sTypoAscender
-        typoDescender = 0           # [OS/2] sTypoDescender
-        typoLineGap = 0             # [OS/2] sTypoLineGap
-        winAscent = 0               # [OS/2] usWinDescent
-        winDescent = 0              # [OS/2] usWinAscent
-        strikeoutPosition = 0       # [OS/2] yStrikeoutPosition
-        strikeoutSize = 0           # [OS/2] yStrikeoutSize
-        averageWidth = 0            # [OS/2] xAvgCharWidth
-        superscriptXSize = 0        # [OS/2] ySuperscriptXSize
-        superscriptXOffset = 0      # [OS/2] ySubscriptXOffset
-        superscriptYSize = 0        # [OS/2] ySuperscriptYSize
-        superscriptYOffset = 0      # [OS/2] ySuperscriptYOffset
-        subscriptXSize = 0          # [OS/2] ySubscriptXSize
-        subscriptXOffset = 0        # [OS/2] ySubscriptXOffset
-        subscriptYSize = 0          # [OS/2] ySubscriptYSize
-        subscriptYOffset = 0        # [OS/2] ySubscriptYOffset
-        underlinePosition = 0       # [post] underlinePosition
-        underlineThickness = 0      # [post] underlineThickness
-        italicAngle = 0             # [post] italicAngle
+    def __init__(self, filepath):
+        self.filepath = filepath         # path to the font
+        self.font_object = None          # fontTools TTFont object
+        self.unitsPerEm = 0              # [head] unitsPerEm
+        self.ascent = 0                  # [hhea] ascent
+        self.descent = 0                 # [hhea] descent
+        self.lineGap = 0                 # [hhea] lineGap
+        self.capheight = 0               # [OS/2] sCapHeight
+        self.xheight = 0                 # [OS/2] sxHeight
+        self.typoAscender = 0            # [OS/2] sTypoAscender
+        self.typoDescender = 0           # [OS/2] sTypoDescender
+        self.typoLineGap = 0             # [OS/2] sTypoLineGap
+        self.winAscent = 0               # [OS/2] usWinDescent
+        self.winDescent = 0              # [OS/2] usWinAscent
+        self.strikeoutPosition = 0       # [OS/2] yStrikeoutPosition
+        self.strikeoutSize = 0           # [OS/2] yStrikeoutSize
+        self.averageWidth = 0            # [OS/2] xAvgCharWidth
+        self.superscriptXSize = 0        # [OS/2] ySuperscriptXSize
+        self.superscriptXOffset = 0      # [OS/2] ySubscriptXOffset
+        self.superscriptYSize = 0        # [OS/2] ySuperscriptYSize
+        self.superscriptYOffset = 0      # [OS/2] ySuperscriptYOffset
+        self.subscriptXSize = 0          # [OS/2] ySubscriptXSize
+        self.subscriptXOffset = 0        # [OS/2] ySubscriptXOffset
+        self.subscriptYSize = 0          # [OS/2] ySubscriptYSize
+        self.subscriptYOffset = 0        # [OS/2] ySubscriptYOffset
+        self.underlinePosition = 0       # [post] underlinePosition
+        self.underlineThickness = 0      # [post] underlineThickness
+        self.italicAngle = 0             # [post] italicAngle
+
+        # define metrics properties of the instance
+        self.create_metrics_object_from_font(self.filepath)
+
+
+    def create_metrics_object_from_font(self, fontpath):
+        self.font_object = ttLib.TTFont(fontpath)
+        self.define_head_table()
+
+    def define_head_table(self):
+        self.unitsPerEm = self.font_object['head'].__dict__['unitsPerEm']
 
 
 def main(maps):
@@ -54,29 +67,26 @@ def main(maps):
                 if os.path.isfile(fontpath):
                     if os.path.isfile(expectedpath):
                         try:
+                            # parse the expected font metrics
                             expected_stream = open(expectedpath, "r")
                             expected_dict = load(expected_stream, Loader=Loader)
-                            print(expected_dict)
-                            sys.exit(0)
 
-                            # TODO : parse YAML file for expected data
+                            # create the observed font metrics object
+                            observed_metrics = MetricsObject(fontpath)
                         except Exception as e:
-                            pass
-
-                        try:
-                            tt = ttLib.TTFont(fontpath)
-
-                            # TODO: parse font OpenType tables for comparison data
-                        except Exception as e:
-                            pass
+                            sys.stderr.write("Error: " + str(e))
                     else:
-                        pass
+                        sys.stderr.write("Error: The requested path to the expected metrics does not appear to be a file")
+                        sys.exit(1)
                 else:
-                    pass
+                    sys.stderr.write("Error: The requested path to the font does not appear to be a file")
+                    sys.exit(1)
             else:
-                pass
+                sys.stderr.write("Error: Please define the paths to the font file and the expected metrics YAML file in the argument")
+                sys.exit(1)
         else:
-            pass
+            sys.stderr.write("Error: incorrect syntax for the definition of the font and expected metrics YAML file paths")
+            sys.exit(1)
 
 
 
