@@ -1,0 +1,23 @@
+# Hack-Regular.ttf
+
+# [head] table
+unitsPerEm: 2048
+
+# [hhea] table
+descent: -483
+ascent: 1901
+lineGap: 0
+
+# [OS/2] table
+capHeight: 1493
+xHeight: 1120
+underlinePosition: -220
+underlineThickness: 90
+italicAngle: 0.0
+typoAscender: 1556
+typoDescender: -492
+winAscent: 1901
+winDescent: 483
+strikeoutPosition: 530
+strikeoutSize: 102
+averageWidth: 1233
