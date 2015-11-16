@@ -51,9 +51,16 @@ class MetricsObject(object):
     def create_metrics_object_from_font(self, fontpath):
         self.font_object = ttLib.TTFont(fontpath)
         self.define_head_table()
+        self.define_hhea_table()
 
     def define_head_table(self):
         self.unitsPerEm = self.font_object['head'].__dict__['unitsPerEm']
+
+    def define_hhea_table(self):
+        hhea_table_dict = self.font_object['hhea'].__dict__
+        self.ascent = hhea_table_dict['ascent']
+        self.descent = hhea_table_dict['descent']
+        self.lineGap = hhea_table_dict['lineGap']
 
 
 def main(maps):
@@ -73,10 +80,11 @@ def main(maps):
 
                             # create the observed font metrics object
                             observed_metrics = MetricsObject(fontpath)
+                            #print(observed_metrics.lineGap)
                         except Exception as e:
                             sys.stderr.write("Error: " + str(e))
                     else:
-                        sys.stderr.write("Error: The requested path to the expected metrics does not appear to be a file")
+                        sys.stderr.write("Error: The requested path to the expected metrics YAML file does not appear to be a file")
                         sys.exit(1)
                 else:
                     sys.stderr.write("Error: The requested path to the font does not appear to be a file")
@@ -87,8 +95,6 @@ def main(maps):
         else:
             sys.stderr.write("Error: incorrect syntax for the definition of the font and expected metrics YAML file paths")
             sys.exit(1)
-
-
 
 
 
