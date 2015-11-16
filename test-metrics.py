@@ -29,7 +29,9 @@ def main(maps):
                 if os.path.isfile(fontpath):
                     if os.path.isfile(expectedpath):
                         try:
-                            expected_filestring = open(expectedpath, "r")
+                            expected_stream = open(expectedpath, "r")
+                            expected_dict = load(expected_stream, Loader=Loader)
+                            print(expected_dict)
 
                             # TODO : parse YAML file for expected data
                         except Exception as e:
