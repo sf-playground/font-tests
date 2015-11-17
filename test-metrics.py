@@ -14,6 +14,8 @@ except ImportError:
     from yaml import Loader
 
 
+# TODO : create metrics YAML file stub with proper definition fields
+
 class MetricsObject(object):
     def __init__(self, filepath):
         self.filepath = filepath         # path to the font
@@ -105,6 +107,9 @@ class MetricsObject(object):
 
 def main(maps):
 
+    # Begin report
+    print("\nBegin test-metrics.py font metrics tests\n")
+
     for map in maps:
         if ":" in map:
             map_list = map.split(':')
@@ -116,10 +121,39 @@ def main(maps):
                         try:
                             # parse the expected font metrics
                             expected_stream = open(expectedpath, "r")
-                            expected_dict = load(expected_stream, Loader=Loader)
+                            expected_metrics = load(expected_stream, Loader=Loader)
 
                             # create the observed font metrics object
                             observed_metrics = MetricsObject(fontpath)
+
+                            # font report header
+                            print("Font Metrics Tests for '" + fontpath + "'")
+
+                            if not observed_metrics.unitsPerEm == expected_metrics['unitsPerEm']:
+                                sys.stderr.write("[test-metrics.py] Error: unitsPerEm values do not match ")
+                                sys.exit(1)
+                            else:
+                                print("  ✓ [head] Units per Em")
+
+                            if not observed_metrics.ascent == expected_metrics['ascent']:
+                                sys.stderr.write("[test-metrics.py] Error: hhea table Ascent values do not match ")
+                                sys.exit(1)
+                            else:
+                                print("  ✓ [hhea] Ascent")
+
+                            if not observed_metrics.descent == expected_metrics['descent']:
+                                sys.stderr.write("[test-metrics.py] Error: hhea table Descent values do not match ")
+                                sys.exit(1)
+                            else:
+                                print("  ✓ [hhea] Descent")
+
+                            if not observed_metrics.lineGap == expected_metrics['lineGap']:
+                                sys.stderr.write("[test-metrics.py] Error: hhea table lineGap values do not match ")
+                                sys.exit(1)
+                            else:
+                                print("  ✓ [hhea] Linegap")
+
+
                         except Exception as e:
                             sys.stderr.write("Error: " + str(e))
                     else:
