@@ -27,13 +27,13 @@ class MetricsObject(object):
         self.typoAscender = 0            # [OS/2] sTypoAscender
         self.typoDescender = 0           # [OS/2] sTypoDescender
         self.typoLineGap = 0             # [OS/2] sTypoLineGap
-        self.winAscent = 0               # [OS/2] usWinDescent
-        self.winDescent = 0              # [OS/2] usWinAscent
+        self.winAscent = 0               # [OS/2] usWinAscent
+        self.winDescent = 0              # [OS/2] usWinDescent
         self.strikeoutPosition = 0       # [OS/2] yStrikeoutPosition
         self.strikeoutSize = 0           # [OS/2] yStrikeoutSize
         self.averageWidth = 0            # [OS/2] xAvgCharWidth
         self.superscriptXSize = 0        # [OS/2] ySuperscriptXSize
-        self.superscriptXOffset = 0      # [OS/2] ySubscriptXOffset
+        self.superscriptXOffset = 0      # [OS/2] ySuperscriptXOffset
         self.superscriptYSize = 0        # [OS/2] ySuperscriptYSize
         self.superscriptYOffset = 0      # [OS/2] ySuperscriptYOffset
         self.subscriptXSize = 0          # [OS/2] ySubscriptXSize
@@ -47,20 +47,60 @@ class MetricsObject(object):
         # define metrics properties of the instance
         self.create_metrics_object_from_font(self.filepath)
 
-
     def create_metrics_object_from_font(self, fontpath):
         self.font_object = ttLib.TTFont(fontpath)
         self.define_head_table()
         self.define_hhea_table()
+        self.define_os2_table()
+        self.define_post_table()
 
     def define_head_table(self):
-        self.unitsPerEm = self.font_object['head'].__dict__['unitsPerEm']
+        try:
+            self.unitsPerEm = self.font_object['head'].__dict__['unitsPerEm']
+        except Exception as e:
+            sys.stderr.write("Error: " + str(e))
 
     def define_hhea_table(self):
-        hhea_table_dict = self.font_object['hhea'].__dict__
-        self.ascent = hhea_table_dict['ascent']
-        self.descent = hhea_table_dict['descent']
-        self.lineGap = hhea_table_dict['lineGap']
+        try:
+            hhea_table_dict = self.font_object['hhea'].__dict__
+            self.ascent = hhea_table_dict['ascent']
+            self.descent = hhea_table_dict['descent']
+            self.lineGap = hhea_table_dict['lineGap']
+        except Exception as e:
+            sys.stderr.write("Error: " + str(e))
+
+    def define_os2_table(self):
+        try:
+            os2_table_dict = self.font_object['OS/2'].__dict__
+            self.capheight = os2_table_dict['sCapHeight']
+            self.xheight = os2_table_dict['sxHeight']
+            self.typoAscender = os2_table_dict['sTypoAscender']
+            self.typoDescender = os2_table_dict['sTypoDescender']
+            self.typoLineGap = os2_table_dict['sTypoLineGap']
+            self.winAscent = os2_table_dict['usWinAscent']
+            self.winDescent = os2_table_dict['usWinDescent']
+            self.strikeoutPosition = os2_table_dict['yStrikeoutPosition']
+            self.strikeoutSize = os2_table_dict['yStrikeoutSize']
+            self.averageWidth = os2_table_dict['xAvgCharWidth']
+            self.superscriptXSize = os2_table_dict['ySuperscriptXSize']
+            self.superscriptXOffset = os2_table_dict['ySuperscriptXOffset']
+            self.superscriptYSize = os2_table_dict['ySuperscriptYSize']
+            self.superscriptYOffset = os2_table_dict['ySuperscriptYOffset']
+            self.subscriptXSize = os2_table_dict['ySubscriptXSize']
+            self.subscriptXOffset = os2_table_dict['ySubscriptXOffset']
+            self.subscriptYSize = os2_table_dict['ySubscriptYSize']
+            self.subscriptYOffset = os2_table_dict['ySubscriptYOffset']
+        except Exception as e:
+            sys.stderr.write("Error: " + str(e))
+
+    def define_post_table(self):
+        try:
+            post_table_dict = self.font_object['post'].__dict__
+            self.underlinePosition = post_table_dict['underlinePosition']
+            self.underlineThickness = post_table_dict['underlineThickness']
+            self.italicAngle = post_table_dict['italicAngle']
+        except Exception as e:
+            sys.stderr.write("Error: " + str(e))
 
 
 def main(maps):
@@ -80,7 +120,6 @@ def main(maps):
 
                             # create the observed font metrics object
                             observed_metrics = MetricsObject(fontpath)
-                            #print(observed_metrics.lineGap)
                         except Exception as e:
                             sys.stderr.write("Error: " + str(e))
                     else:
