@@ -313,6 +313,7 @@ def main(maps):
 
                         except Exception as e:
                             sys.stderr.write("ERROR: " + str(e))
+                            sys.exit(1)
                     else:
                         sys.stderr.write("ERROR: The requested path to the expected metrics YAML file does not appear to be a file")
                         sys.exit(1)
