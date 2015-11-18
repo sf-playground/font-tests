@@ -4,7 +4,6 @@
 import sys
 import os
 import os.path
-import hashlib
 from fontTools import ttLib
 
 from yaml import load, dump
