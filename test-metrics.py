@@ -14,9 +14,8 @@ except ImportError:
     from yaml import Loader
 
 
-# TODO : create metrics YAML file stub with proper definition fields
-
 class MetricsObject(object):
+    """A font metrics object that maintains metrics properties during testing"""
     def __init__(self, filepath):
         self.filepath = filepath         # path to the font
         self.font_object = None          # fontTools TTFont object
@@ -106,6 +105,7 @@ class MetricsObject(object):
 
 
 def main(maps):
+    """Performs metrics tests on fonts vs. expected values in a YAML settings file"""
 
     # Begin report
     print("\nBegin test-metrics.py font metrics tests\n")
@@ -327,7 +327,58 @@ def main(maps):
             sys.stderr.write("ERROR: incorrect syntax for the command line definition of the font and expected metrics YAML file paths")
             sys.exit(1)
 
+# YAML stub file text
+yaml_stub = """
+# [FONT PATH]
+
+# [head] table
+unitsPerEm:
+
+# [hhea] table
+descent:
+ascent:
+lineGap:
+
+# [OS/2] table
+capHeight:
+xHeight:
+typoAscender:
+typoDescender:
+typoLineGap:
+winAscent:
+winDescent:
+strikeoutPosition:
+strikeoutSize:
+averageWidth:
+superscriptXSize:
+superscriptXOffset:
+superscriptYSize:
+superscriptYOffset:
+subscriptXSize:
+subscriptXOffset:
+subscriptYSize:
+subscriptYOffset:
+
+# [post] table
+underlinePosition:
+underlineThickness:
+italicAngle:
+"""
+
+def write_stubfile():
+    """Writes a metrics YAML stub file in the root directory"""
+    try:
+        with open("metrics.yaml", 'wt') as writer:
+            writer.write(yaml_stub)
+        print("[test-metrics.py] Metrics YAML stub file was successfully created on the path 'metrics.yaml'")
+    except Exception as e:
+        sys.stderr.write("[test-metrics.py] ERROR: Unable to generate file stub. " + str(e))
+        sys.exit(1)
 
 
 if __name__ == '__main__':
-    main(sys.argv[1:])
+    if len(sys.argv) > 0:
+        if sys.argv[1].lower() == "stub":
+            write_stubfile()
+        else:
+            main(sys.argv[1:])
