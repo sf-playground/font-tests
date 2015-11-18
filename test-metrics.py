@@ -119,6 +119,7 @@ def main(maps):
                 if os.path.isfile(fontpath):
                     if os.path.isfile(expectedpath):
                         try:
+                            ERROR_OCCURRED = False
                             # parse the expected font metrics
                             expected_stream = open(expectedpath, "r")
                             expected_metrics = load(expected_stream, Loader=Loader)
@@ -129,44 +130,200 @@ def main(maps):
                             # font report header
                             print("Font Metrics Tests for '" + fontpath + "'")
 
+                            # Units per Em Test
                             if not observed_metrics.unitsPerEm == expected_metrics['unitsPerEm']:
-                                sys.stderr.write("[test-metrics.py] Error: unitsPerEm values do not match ")
-                                sys.exit(1)
+                                sys.stderr.write("  X [head] ERROR: unitsPerEm values do not match\n")
+                                ERROR_OCCURRED = True
                             else:
                                 print("  ✓ [head] Units per Em")
 
+                            # hhea Ascent Test
                             if not observed_metrics.ascent == expected_metrics['ascent']:
-                                sys.stderr.write("[test-metrics.py] Error: hhea table Ascent values do not match ")
-                                sys.exit(1)
+                                sys.stderr.write("  X [hhea] ERROR: hhea table Ascent values do not match\n")
+                                ERROR_OCCURRED = True
                             else:
                                 print("  ✓ [hhea] Ascent")
 
+                            # hhea Descent Test
                             if not observed_metrics.descent == expected_metrics['descent']:
-                                sys.stderr.write("[test-metrics.py] Error: hhea table Descent values do not match ")
-                                sys.exit(1)
+                                sys.stderr.write("  X [hhea] ERROR: hhea table Descent values do not match\n")
+                                ERROR_OCCURRED = True
                             else:
                                 print("  ✓ [hhea] Descent")
 
+                            # hhea Linegap test
                             if not observed_metrics.lineGap == expected_metrics['lineGap']:
-                                sys.stderr.write("[test-metrics.py] Error: hhea table lineGap values do not match ")
-                                sys.exit(1)
+                                sys.stderr.write("  X [hhea] ERROR: hhea table lineGap values do not match\n")
+                                ERROR_OCCURRED = True
                             else:
                                 print("  ✓ [hhea] Linegap")
 
+                            # Cap Height Test
+                            if not observed_metrics.capheight == expected_metrics['capHeight']:
+                                sys.stderr.write("  X [OS/2] ERROR: Cap Height values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Cap Height")
+
+                            # X Height Test
+                            if not observed_metrics.xheight == expected_metrics['xHeight']:
+                                sys.stderr.write("  X [OS/2] ERROR: X Height values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] X Height")
+
+                            # Typo Ascender Test
+                            if not observed_metrics.typoAscender == expected_metrics['typoAscender']:
+                                sys.stderr.write("  X [OS/2] ERROR: Typo Ascender values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Typo Ascender")
+
+                            # Typo Descender Test
+                            if not observed_metrics.typoDescender == expected_metrics['typoDescender']:
+                                sys.stderr.write("  X [OS/2] ERROR: Typo Descender values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Typo Descender")
+
+                            # Typo Linegap Test
+                            if not observed_metrics.typoLineGap == expected_metrics['typoLineGap']:
+                                sys.stderr.write("  X [OS/2] ERROR: Typo Linegap values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Typo Linegap")
+
+                            # winAscent Test
+                            if not observed_metrics.winAscent == expected_metrics['winAscent']:
+                                sys.stderr.write("  X [OS/2] ERROR: winAscent values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] winAscent")
+
+                            # winDescent Test
+                            if not observed_metrics.winDescent == expected_metrics['winDescent']:
+                                sys.stderr.write("  X [OS/2] ERROR: winDescent values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] winDescent")
+
+                            # Strikeout Position Test
+                            if not observed_metrics.strikeoutPosition == expected_metrics['strikeoutPosition']:
+                                sys.stderr.write("  X [OS/2] ERROR: Strikeout Position values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Strikeout Position")
+
+                            # Strikeout Size test
+                            if not observed_metrics.strikeoutSize == expected_metrics['strikeoutSize']:
+                                sys.stderr.write("  X [OS/2] ERROR: Strikeout Size values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Strikeout Size")
+
+                            # Average Character Width Test
+                            if not observed_metrics.averageWidth == expected_metrics['averageWidth']:
+                                sys.stderr.write("  X [OS/2] ERROR: Average Character Width values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Average Character Width")
+
+                            # Superscript X Size Test
+                            if not observed_metrics.superscriptXSize == expected_metrics['superscriptXSize']:
+                                sys.stderr.write("  X [OS/2] ERROR: Superscript X Size values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Superscript X Size")
+
+                            # Superscript X Offset Test
+                            if not observed_metrics.superscriptXOffset == expected_metrics['superscriptXOffset']:
+                                sys.stderr.write("  X [OS/2] ERROR: Superscript X Offset values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Superscript X Offset")
+
+                            # Superscript Y Size Test
+                            if not observed_metrics.superscriptYSize == expected_metrics['superscriptYSize']:
+                                sys.stderr.write("  X [OS/2] ERROR: Superscript Y Size values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Superscript Y Size")
+
+                            # Superscript Y Offset Test
+                            if not observed_metrics.superscriptYOffset == expected_metrics['superscriptYOffset']:
+                                sys.stderr.write("  X [OS/2] ERROR: Superscript Y Offset values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Superscript Y Offset")
+
+                            # Subscript X Size Test
+                            if not observed_metrics.subscriptXSize == expected_metrics['subscriptXSize']:
+                                sys.stderr.write("  X [OS/2] ERROR: Subscript X Size values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Subscript X Size")
+
+                            # Subscript X Offset Test
+                            if not observed_metrics.subscriptXOffset == expected_metrics['subscriptXOffset']:
+                                sys.stderr.write("  X [OS/2] ERROR: Subscript X Offset values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Subscript X Offset")
+
+                            # Subscript Y Size Test
+                            if not observed_metrics.subscriptYSize == expected_metrics['subscriptYSize']:
+                                sys.stderr.write("  X [OS/2] ERROR: Subscript Y Size values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Subscript Y Size")
+
+                            # Subscript X Offset Test
+                            if not observed_metrics.subscriptYOffset == expected_metrics['subscriptYOffset']:
+                                sys.stderr.write("  X [OS/2] ERROR: Subscript Y Offset values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [OS/2] Subscript Y Offset")
+
+                            # Underline Posiiton Test
+                            if not observed_metrics.underlinePosition == expected_metrics['underlinePosition']:
+                                sys.stderr.write("  X [post] ERROR: Underline Position values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [post] Underline Position")
+
+                            # Underline Posiiton Test
+                            if not observed_metrics.underlineThickness == expected_metrics['underlineThickness']:
+                                sys.stderr.write("  X [post] ERROR: Underline Thickness values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [post] Underline Thickness")
+
+                            # Italic Angle Test
+                            if not observed_metrics.italicAngle == expected_metrics['italicAngle']:
+                                sys.stderr.write("  X [post] ERROR: Italic Angle values do not match\n")
+                                ERROR_OCCURRED = True
+                            else:
+                                print("  ✓ [post] Italic Angle")
+
+                            # Raise appropriate exit code based upon success of all tests
+                            if ERROR_OCCURRED == True:
+                                sys.exit(1)
+                            else:
+                                sys.exit(0)
 
                         except Exception as e:
-                            sys.stderr.write("Error: " + str(e))
+                            sys.stderr.write("ERROR: " + str(e))
                     else:
-                        sys.stderr.write("Error: The requested path to the expected metrics YAML file does not appear to be a file")
+                        sys.stderr.write("ERROR: The requested path to the expected metrics YAML file does not appear to be a file")
                         sys.exit(1)
                 else:
-                    sys.stderr.write("Error: The requested path to the font does not appear to be a file")
+                    sys.stderr.write("ERROR: The requested path to the font does not appear to be a file")
                     sys.exit(1)
             else:
-                sys.stderr.write("Error: Please define the paths to the font file and the expected metrics YAML file in the argument")
+                sys.stderr.write("ERROR: Please define the paths to the font file and the expected metrics YAML file in the argument")
                 sys.exit(1)
         else:
-            sys.stderr.write("Error: incorrect syntax for the definition of the font and expected metrics YAML file paths")
+            sys.stderr.write("ERROR: incorrect syntax for the command line definition of the font and expected metrics YAML file paths")
             sys.exit(1)
 
 
