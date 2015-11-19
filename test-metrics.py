@@ -1,6 +1,12 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+#  ------------------------------------------------------------------------------
+#  test-metrics.py
+#  Copyright 2015 Christopher Simpkins
+#  MIT license
+#  ------------------------------------------------------------------------------
+
 import sys
 import os
 import os.path
