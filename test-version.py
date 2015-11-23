@@ -25,7 +25,6 @@ def main(arguments):
 
     # regular expression match pattern for version string in fonts
     pattern = re.compile(r"Version\s(?P<version>\d\.\d{3})")
-    pattern2 = re.compile(r"(?P<version>Version)")
 
     for fontpath in filepaths:
         if os.path.isfile(fontpath):
@@ -39,12 +38,18 @@ def main(arguments):
                     version_string_raw = name_table.__dict__['string']
 
             if len(version_string_raw) > 0:
-                # UTF-16be encoded string, need to convert
+                # UTF-16 big endian encoded table string, need to convert
                 version_string_decoded = bytes.decode(version_string_raw, "utf-16-be")
                 if version_string_decoded.startswith("Version"):
-                    pass
+                    m = pattern.search(version_string_decoded)
+                    observed_version = m.group('version')
+                    if observed_version == expected_version:
+                        print("[test-version.py] Expected version string '" + expected_version + "' was detected in the name tables.\n")
+                    else:
+                        sys.stderr.write("[test-version.py] ERROR: Expected version '" + expected_version + "' does not equal observed version '" + observed_version + "'\n")
+                        ERROR_OCCURRED = True
                 else:
-                    pass
+                    sys.stderr.write("[test-version.py] ERROR: Did not detect 'Version X.XXX' syntax at the beginning of the version string in nameID=5 name table.")
             else:
                 sys.stderr.write("[test-version.py] ERROR: unable to parse the version string from the nameID = 5 table for '" + fontpath + "'.")
                 ERROR_OCCURRED = True
