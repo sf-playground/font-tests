@@ -34,9 +34,9 @@ def main(arguments):
             # test glyph number from [maxp] table
             observed_glyph_no = tt['maxp'].__dict__['numGlyphs']
             if observed_glyph_no == expected_glyph_no:
-                print("  ✓ " + fontpath + " glyph number is " + str(expected_glyph_no))
+                print("[test-glyphnumber.py]  ✓ " + fontpath + " glyph number is " + str(expected_glyph_no))
             else:
-                sys.stderr.write("  X " + fontpath + " glyph number is " + str(observed_glyph_no) + " NOT " + str(expected_glyph_no))
+                sys.stderr.write("[test-glyphnumber.py]  X " + fontpath + " glyph number is " + str(observed_glyph_no) + " NOT " + str(expected_glyph_no))
                 ERROR_OCCURRED = True
         else:
             sys.stderr.write("[test-glyphnumber.py] ERROR: The path '" + fontpath + "' is not a path to a font file.\n")
