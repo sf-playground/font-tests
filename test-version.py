@@ -10,6 +10,8 @@
 import sys
 import os
 import os.path
+import re
+import codecs
 from fontTools import ttLib
 
 def main(arguments):
@@ -20,6 +22,10 @@ def main(arguments):
     expected_version = arguments[-1]
 
     filepaths = arguments[0:-1]
+
+    # regular expression match pattern for version string in fonts
+    pattern = re.compile(r"Version\s(?P<version>\d\.\d{3})")
+    pattern2 = re.compile(r"(?P<version>Version)")
 
     for fontpath in filepaths:
         if os.path.isfile(fontpath):
@@ -33,8 +39,12 @@ def main(arguments):
                     version_string_raw = name_table.__dict__['string']
 
             if len(version_string_raw) > 0:
-                pass
-                # TODO: parse the version number from the raw version string and compare
+                # UTF-16be encoded string, need to convert
+                version_string_decoded = bytes.decode(version_string_raw, "utf-16-be")
+                if version_string_decoded.startswith("Version"):
+                    pass
+                else:
+                    pass
             else:
                 sys.stderr.write("[test-version.py] ERROR: unable to parse the version string from the nameID = 5 table for '" + fontpath + "'.")
                 ERROR_OCCURRED = True
