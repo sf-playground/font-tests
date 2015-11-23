@@ -50,6 +50,7 @@ def main(arguments):
                         ERROR_OCCURRED = True
                 else:
                     sys.stderr.write("[test-version.py] ERROR: Did not detect 'Version X.XXX' syntax at the beginning of the version string in nameID=5 name table.")
+                    ERROR_OCCURRED = True
             else:
                 sys.stderr.write("[test-version.py] ERROR: unable to parse the version string from the nameID = 5 table for '" + fontpath + "'.")
                 ERROR_OCCURRED = True
